@@ -32,7 +32,8 @@ class Users
     #[ORM\Column(length: 255)]
     private ?string $lvl = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    //ajoute de l'option curent_timestramp pour ajouter directement la date et l'heure actuel dans le base de donné
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, options:['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(length: 255)]
