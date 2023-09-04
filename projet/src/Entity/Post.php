@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
@@ -14,17 +13,19 @@ class Post
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 2500)]
+    #[ORM\Column(length: 10000)]
     private ?string $message = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, options:['default' => 'CURRENT_TIMESTAMP'])]
-    private ?\DateTimeInterface $date = null;
-
     #[ORM\Column]
-    private ?int $userid = null;
+    private ?\DateTimeImmutable $creat_at = null;
 
-    #[ORM\Column]
-    private ?int $catégorie = null;
+    #[ORM\ManyToOne(inversedBy: 'idpost')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Users $userid = null;
+
+    #[ORM\ManyToOne(inversedBy: 'idpost')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?catégorie $catégorie = null;
 
     public function getId(): ?int
     {
@@ -43,36 +44,36 @@ class Post
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getCreatAt(): ?\DateTimeImmutable
     {
-        return $this->date;
+        return $this->creat_at;
     }
 
-    public function setDate(\DateTimeInterface $date): static
+    public function setCreatAt(\DateTimeImmutable $creat_at): static
     {
-        $this->date = $date;
+        $this->creat_at = $creat_at;
 
         return $this;
     }
 
-    public function getUserid(): ?int
+    public function getUserid(): ?Users
     {
         return $this->userid;
     }
 
-    public function setUserid(int $userid): static
+    public function setUserid(?Users $userid): static
     {
         $this->userid = $userid;
 
         return $this;
     }
 
-    public function getCatégorie(): ?int
+    public function getCatégorie(): ?catégorie
     {
         return $this->catégorie;
     }
 
-    public function setCatégorie(int $catégorie): static
+    public function setCatégorie(?catégorie $catégorie): static
     {
         $this->catégorie = $catégorie;
 

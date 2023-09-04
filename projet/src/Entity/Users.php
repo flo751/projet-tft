@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UsersRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -38,6 +40,14 @@ class Users
 
     #[ORM\Column(length: 255)]
     private ?string $password = null;
+
+    #[ORM\OneToMany(mappedBy: 'userid', targetEntity: Post::class)]
+    private Collection $idpost;
+
+    public function __construct()
+    {
+        $this->idpost = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -136,6 +146,36 @@ class Users
     public function setPassword(string $password): static
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Post>
+     */
+    public function getIdpost(): Collection
+    {
+        return $this->idpost;
+    }
+
+    public function addIdpost(Post $idpost): static
+    {
+        if (!$this->idpost->contains($idpost)) {
+            $this->idpost->add($idpost);
+            $idpost->setUserid($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIdpost(Post $idpost): static
+    {
+        if ($this->idpost->removeElement($idpost)) {
+            // set the owning side to null (unless already changed)
+            if ($idpost->getUserid() === $this) {
+                $idpost->setUserid(null);
+            }
+        }
 
         return $this;
     }
