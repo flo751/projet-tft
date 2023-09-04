@@ -19,11 +19,11 @@ class Catégorie
     private ?string $nom = null;
 
     #[ORM\OneToMany(mappedBy: 'catégorie', targetEntity: Post::class)]
-    private Collection $idpost;
+    private Collection $posts;
 
     public function __construct()
     {
-        $this->idpost = new ArrayCollection();
+        $this->posts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -46,27 +46,27 @@ class Catégorie
     /**
      * @return Collection<int, Post>
      */
-    public function getIdpost(): Collection
+    public function getPosts(): Collection
     {
-        return $this->idpost;
+        return $this->posts;
     }
 
-    public function addIdpost(Post $idpost): static
+    public function addPost(Post $post): static
     {
-        if (!$this->idpost->contains($idpost)) {
-            $this->idpost->add($idpost);
-            $idpost->setCatégorie($this);
+        if (!$this->posts->contains($post)) {
+            $this->posts->add($post);
+            $post->setCatégorie($this);
         }
 
         return $this;
     }
 
-    public function removeIdpost(Post $idpost): static
+    public function removePost(Post $post): static
     {
-        if ($this->idpost->removeElement($idpost)) {
+        if ($this->posts->removeElement($post)) {
             // set the owning side to null (unless already changed)
-            if ($idpost->getCatégorie() === $this) {
-                $idpost->setCatégorie(null);
+            if ($post->getCatégorie() === $this) {
+                $post->setCatégorie(null);
             }
         }
 

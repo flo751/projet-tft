@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
@@ -19,13 +21,21 @@ class Post
     #[ORM\Column]
     private ?\DateTimeImmutable $creat_at = null;
 
-    #[ORM\ManyToOne(inversedBy: 'idpost')]
+    #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Users $userid = null;
+    private ?Utilisateurs $useid = null;
 
-    #[ORM\ManyToOne(inversedBy: 'idpost')]
+    #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?catégorie $catégorie = null;
+    private ?Catégorie $catégorie = null;
+
+    #[ORM\OneToMany(mappedBy: 'postid', targetEntity: Comm::class)]
+    private Collection $comms;
+
+    public function __construct()
+    {
+        $this->comms = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -56,26 +66,56 @@ class Post
         return $this;
     }
 
-    public function getUserid(): ?Users
+    public function getUseid(): ?Utilisateurs
     {
-        return $this->userid;
+        return $this->useid;
     }
 
-    public function setUserid(?Users $userid): static
+    public function setUseid(?Utilisateurs $useid): static
     {
-        $this->userid = $userid;
+        $this->useid = $useid;
 
         return $this;
     }
 
-    public function getCatégorie(): ?catégorie
+    public function getCatégorie(): ?Catégorie
     {
         return $this->catégorie;
     }
 
-    public function setCatégorie(?catégorie $catégorie): static
+    public function setCatégorie(?Catégorie $catégorie): static
     {
         $this->catégorie = $catégorie;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comm>
+     */
+    public function getComms(): Collection
+    {
+        return $this->comms;
+    }
+
+    public function addComm(Comm $comm): static
+    {
+        if (!$this->comms->contains($comm)) {
+            $this->comms->add($comm);
+            $comm->setPostid($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComm(Comm $comm): static
+    {
+        if ($this->comms->removeElement($comm)) {
+            // set the owning side to null (unless already changed)
+            if ($comm->getPostid() === $this) {
+                $comm->setPostid(null);
+            }
+        }
 
         return $this;
     }
