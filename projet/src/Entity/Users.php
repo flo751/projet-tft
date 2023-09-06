@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\UtilisateursRepository;
+use App\Repository\UsersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: UtilisateursRepository::class)]
-class Utilisateurs
+#[ORM\Entity(repositoryClass: UsersRepository::class)]
+class Users
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,7 +16,7 @@ class Utilisateurs
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nom = null;
+    private ?string $Nom = null;
 
     #[ORM\Column(length: 255)]
     private ?string $prénom = null;
@@ -28,27 +28,27 @@ class Utilisateurs
     private ?string $pseudo = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $classement = null;
+    private ?string $password = null;
 
     #[ORM\Column(length: 255)]
     private ?string $role = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $creat_at = null;
+    #[ORM\Column(length: 255)]
+    private ?string $niveau = null;
 
     #[ORM\Column(length: 255)]
     private ?string $img = null;
 
-    #[ORM\OneToMany(mappedBy: 'useid', targetEntity: Post::class)]
+    #[ORM\OneToMany(mappedBy: 'userid', targetEntity: Post::class)]
     private Collection $posts;
 
-    #[ORM\OneToMany(mappedBy: 'userid', targetEntity: Comm::class)]
-    private Collection $comms;
+    #[ORM\OneToMany(mappedBy: 'userid', targetEntity: Commentaire::class)]
+    private Collection $commentaires;
 
     public function __construct()
     {
         $this->posts = new ArrayCollection();
-        $this->comms = new ArrayCollection();
+        $this->commentaires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -58,12 +58,12 @@ class Utilisateurs
 
     public function getNom(): ?string
     {
-        return $this->nom;
+        return $this->Nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(string $Nom): static
     {
-        $this->nom = $nom;
+        $this->Nom = $Nom;
 
         return $this;
     }
@@ -104,14 +104,14 @@ class Utilisateurs
         return $this;
     }
 
-    public function getClassement(): ?string
+    public function getPassword(): ?string
     {
-        return $this->classement;
+        return $this->password;
     }
 
-    public function setClassement(string $classement): static
+    public function setPassword(string $password): static
     {
-        $this->classement = $classement;
+        $this->password = $password;
 
         return $this;
     }
@@ -128,14 +128,14 @@ class Utilisateurs
         return $this;
     }
 
-    public function getCreatAt(): ?\DateTimeImmutable
+    public function getNiveau(): ?string
     {
-        return $this->creat_at;
+        return $this->niveau;
     }
 
-    public function setCreatAt(\DateTimeImmutable $creat_at): static
+    public function setNiveau(string $niveau): static
     {
-        $this->creat_at = $creat_at;
+        $this->niveau = $niveau;
 
         return $this;
     }
@@ -164,7 +164,7 @@ class Utilisateurs
     {
         if (!$this->posts->contains($post)) {
             $this->posts->add($post);
-            $post->setUseid($this);
+            $post->setUserid($this);
         }
 
         return $this;
@@ -174,8 +174,8 @@ class Utilisateurs
     {
         if ($this->posts->removeElement($post)) {
             // set the owning side to null (unless already changed)
-            if ($post->getUseid() === $this) {
-                $post->setUseid(null);
+            if ($post->getUserid() === $this) {
+                $post->setUserid(null);
             }
         }
 
@@ -183,29 +183,29 @@ class Utilisateurs
     }
 
     /**
-     * @return Collection<int, Comm>
+     * @return Collection<int, Commentaire>
      */
-    public function getComms(): Collection
+    public function getCommentaires(): Collection
     {
-        return $this->comms;
+        return $this->commentaires;
     }
 
-    public function addComm(Comm $comm): static
+    public function addCommentaire(Commentaire $commentaire): static
     {
-        if (!$this->comms->contains($comm)) {
-            $this->comms->add($comm);
-            $comm->setUserid($this);
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires->add($commentaire);
+            $commentaire->setUserid($this);
         }
 
         return $this;
     }
 
-    public function removeComm(Comm $comm): static
+    public function removeCommentaire(Commentaire $commentaire): static
     {
-        if ($this->comms->removeElement($comm)) {
+        if ($this->commentaires->removeElement($commentaire)) {
             // set the owning side to null (unless already changed)
-            if ($comm->getUserid() === $this) {
-                $comm->setUserid(null);
+            if ($commentaire->getUserid() === $this) {
+                $commentaire->setUserid(null);
             }
         }
 

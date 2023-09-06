@@ -15,6 +15,9 @@ class Post
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $titre = null;
+
     #[ORM\Column(length: 10000)]
     private ?string $message = null;
 
@@ -23,23 +26,35 @@ class Post
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Utilisateurs $useid = null;
+    private ?users $userid = null;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Catégorie $catégorie = null;
+    private ?catégorie $catégorie = null;
 
-    #[ORM\OneToMany(mappedBy: 'postid', targetEntity: Comm::class)]
-    private Collection $comms;
+    #[ORM\OneToMany(mappedBy: 'postid', targetEntity: Commentaire::class)]
+    private Collection $commentaires;
 
     public function __construct()
     {
-        $this->comms = new ArrayCollection();
+        $this->commentaires = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getTitre(): ?string
+    {
+        return $this->titre;
+    }
+
+    public function setTitre(string $titre): static
+    {
+        $this->titre = $titre;
+
+        return $this;
     }
 
     public function getMessage(): ?string
@@ -66,24 +81,24 @@ class Post
         return $this;
     }
 
-    public function getUseid(): ?Utilisateurs
+    public function getUserid(): ?users
     {
-        return $this->useid;
+        return $this->userid;
     }
 
-    public function setUseid(?Utilisateurs $useid): static
+    public function setUserid(?users $userid): static
     {
-        $this->useid = $useid;
+        $this->userid = $userid;
 
         return $this;
     }
 
-    public function getCatégorie(): ?Catégorie
+    public function getCatégorie(): ?catégorie
     {
         return $this->catégorie;
     }
 
-    public function setCatégorie(?Catégorie $catégorie): static
+    public function setCatégorie(?catégorie $catégorie): static
     {
         $this->catégorie = $catégorie;
 
@@ -91,29 +106,29 @@ class Post
     }
 
     /**
-     * @return Collection<int, Comm>
+     * @return Collection<int, Commentaire>
      */
-    public function getComms(): Collection
+    public function getCommentaires(): Collection
     {
-        return $this->comms;
+        return $this->commentaires;
     }
 
-    public function addComm(Comm $comm): static
+    public function addCommentaire(Commentaire $commentaire): static
     {
-        if (!$this->comms->contains($comm)) {
-            $this->comms->add($comm);
-            $comm->setPostid($this);
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires->add($commentaire);
+            $commentaire->setPostid($this);
         }
 
         return $this;
     }
 
-    public function removeComm(Comm $comm): static
+    public function removeCommentaire(Commentaire $commentaire): static
     {
-        if ($this->comms->removeElement($comm)) {
+        if ($this->commentaires->removeElement($commentaire)) {
             // set the owning side to null (unless already changed)
-            if ($comm->getPostid() === $this) {
-                $comm->setPostid(null);
+            if ($commentaire->getPostid() === $this) {
+                $commentaire->setPostid(null);
             }
         }
 

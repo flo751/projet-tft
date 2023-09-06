@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\CommRepository;
+use App\Repository\CommentaireRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CommRepository::class)]
-class Comm
+#[ORM\Entity(repositoryClass: CommentaireRepository::class)]
+class Commentaire
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -17,13 +17,13 @@ class Comm
     private ?string $message = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $creat_att = null;
+    private ?\DateTimeImmutable $creat_at = null;
 
-    #[ORM\ManyToOne(inversedBy: 'comms')]
+    #[ORM\ManyToOne(inversedBy: 'commentaires')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Utilisateurs $userid = null;
+    private ?users $userid = null;
 
-    #[ORM\ManyToOne(inversedBy: 'comms')]
+    #[ORM\ManyToOne(inversedBy: 'commentaires')]
     #[ORM\JoinColumn(nullable: false)]
     private ?post $postid = null;
 
@@ -44,24 +44,24 @@ class Comm
         return $this;
     }
 
-    public function getCreatAtt(): ?\DateTimeImmutable
+    public function getCreatAt(): ?\DateTimeImmutable
     {
-        return $this->creat_att;
+        return $this->creat_at;
     }
 
-    public function setCreatAtt(\DateTimeImmutable $creat_att): static
+    public function setCreatAt(\DateTimeImmutable $creat_at): static
     {
-        $this->creat_att = $creat_att;
+        $this->creat_at = $creat_at;
 
         return $this;
     }
 
-    public function getUserid(): ?Utilisateurs
+    public function getUserid(): ?users
     {
         return $this->userid;
     }
 
-    public function setUserid(?Utilisateurs $userid): static
+    public function setUserid(?users $userid): static
     {
         $this->userid = $userid;
 
